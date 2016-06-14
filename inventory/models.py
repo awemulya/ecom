@@ -1,8 +1,14 @@
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Company(models.Model):
     name = models.CharField(max_length=256)
+
+
+class Category(MPTTModel):
+    name = models.CharField(max_length=256, unique=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
 
 class Unit(models.Model):
@@ -88,6 +94,10 @@ class Item(models.Model):
     rate = models.FloatField(null=True)
     company = models.ForeignKey(Company, null=True)
     unit = models.ForeignKey(Unit)
+    category = models.ForeignKey(Category, related_name='item_category', null=True, blank=True)
+
+    def __str__(self):
+        return str(self.name)
 
 
 class OtherProperties(models.Model):
@@ -98,7 +108,7 @@ class OtherProperties(models.Model):
 
 class ItemImages(models.Model):
     item = models.ForeignKey(Item, related_name='images')
-    file = models.ImageField()
+    file = models.ImageField(upload_to='items')
 
 
 class Inventory(models.Model):

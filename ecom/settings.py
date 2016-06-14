@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',
+    'mptt',
     'inventory.apps.InventoryConfig',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -1,0 +1,8 @@
+<h1>Units</h1>
+<ul>
+{% for unit in object_list %}
+    <li>{{ unit.name }} - {{ unit.short_name }}</li>
+{% empty %}
+    <li>No units yet.</li>
+{% endfor %}
+</ul>
