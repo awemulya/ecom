@@ -1,14 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>edit</title>
-</head>
-<body>
-<form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save" />
-</form>
+{% extends base_template %}
+{% load i18n %}
 
-</body>
-</html>
+{% block page-title %}{{ scenario }} {% trans 'Unit' %}{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url 'inventory:unit_list' %}">{% trans 'Units' %}</a></li>
+    <li>{{ scenario }} {{ form.instance }}</li>
+{% endblock %}
+
+{% block content %}
+
+    <form method="post" id='form'>
+        <div class="well">
+            {{ form.non_field_errors }}
+            {{ form.errors }}
+            {% csrf_token %}
+            {{ form.as_p }}
+        </div>
+
+        <input type="submit" class='btn btn-info btn-raised' value="{% trans 'Save' %}">
+
+        {% if form.instance.id %}
+            <a href="{% url 'inventory:unit_delete' form.instance.id %}" class="btn btn-danger btn-raised">{% trans 'Delete' %}</a>
+        {% endif %}
+    </form>
+
+{% endblock %}
