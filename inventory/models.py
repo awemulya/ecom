@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse_lazy
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -89,10 +90,35 @@ class UnitConversion(models.Model):
         return self.base_unit.name + ' - ' + self.unit_to_convert.name + ' : ' + str(self.multiple)
 
 
+class InventoryAccount(models.Model):
+    name = models.CharField(max_length=100)
+    account_no = models.PositiveIntegerField()
+    current_balance = models.FloatField(default=0)
+
+    def __str__(self):
+        return str(self.account_no) + ' [' + self.name + ']'
+
+    def get_absolute_url(self):
+        # return '/inventory_account/' + str(self.id)
+        return reverse_lazy('view_inventory_account', kwargs={'pk': self.pk})
+
+    @staticmethod
+    def get_next_account_no():
+        from django.db.models import Max
+
+        max_voucher_no = InventoryAccount.objects.all().aggregate(Max('account_no'))['account_no__max']
+        if max_voucher_no:
+            return max_voucher_no + 1
+        else:
+            return 1
+
+
+
 class Item(models.Model):
     name = models.CharField(max_length=256)
     rate = models.FloatField(null=True)
     company = models.ForeignKey(Company, null=True)
+    account = models.OneToOneField(InventoryAccount, related_name='item', null=True)
     unit = models.ForeignKey(Unit)
     category = models.ForeignKey(Category, related_name='item_category', null=True, blank=True)
 

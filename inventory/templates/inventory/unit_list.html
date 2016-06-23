@@ -1,8 +1,47 @@
-<h1>Units</h1>
-<ul>
-{% for unit in object_list %}
-    <li>{{ unit.name }} - {{ unit.short_name }}</li>
-{% empty %}
-    <li>No units yet.</li>
-{% endfor %}
-</ul>
+{% extends "_base.html" %}
+{% load i18n staticfiles %}
+{% load filters %}
+
+{% block page-title %}{% trans 'Units' %}{% endblock %}
+
+{% block header-buttons %}
+    <a class="btn btn-success btn-raised" href="{% url 'unit_add' %}">{% trans 'New' %} {% trans 'Unit' %}</a>
+{% endblock %}
+
+{% block content %}
+
+    {% load pagination_tags %}
+    {% load sorting_tags %}
+    {% load filters %}
+
+    <div class='well'>
+
+        {% autosort object_list as sorted_objects %}
+        {% autopaginate object_list 25 as paginated_objects %}
+
+        <table class="table table-striped">
+            <thead>
+            <th>{% anchor name _('Name') %}</th>
+            <th>{% anchor short_name _(' Short name') %}</th>
+            </thead>
+            <tbody>
+            {% for unit in paginated_objects %}
+                <tr>
+                    <td>
+                        <a href="{% url 'unit_edit' unit.pk %}">{{ unit.name }}</a>
+                    </td>
+                    <td>
+                        {{ unit.short_name }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% paginate %}
+
+    </div>
+
+
+
+{% endblock %}

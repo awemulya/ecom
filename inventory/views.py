@@ -18,7 +18,7 @@ class UnitDetailView(DetailView):
 
 class UnitView(object):
     model = Unit
-    success_url = reverse_lazy('unit_list')
+    success_url = reverse_lazy('inventory:unit_list')
     form_class = UnitForm
 
 
