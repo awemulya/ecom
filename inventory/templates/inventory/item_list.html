@@ -1,0 +1,61 @@
+{% extends "_base.html" %}
+{% load i18n staticfiles %}
+{% load filters %}
+
+{% block page-title %}{% trans 'Items' %}{% endblock %}
+
+{% block header-buttons %}
+    <a class="btn btn-success btn-raised" href="{% url 'item_add' %}">{% trans 'New' %} {% trans 'Item' %}</a>
+{% endblock %}
+
+{% block content %}
+
+    <div class="well">
+
+        {% load pagination_tags %}
+        {% load sorting_tags %}
+        {% load filters %}
+
+        {% autosort object_list as sorted_objects %}
+        {% autopaginate sorted_objects 25 as paginated_objects %}
+
+        <table class="table table-striped">
+            <thead>
+            <th>{% anchor name _('Name') %}</th>
+            <th>{% trans 'Other Properties' %}</th>
+            <th>{% trans 'Ledger' %}</th>
+            </thead>
+            <tbody>
+            {% for item in paginated_objects %}
+                <tr>
+                    <td class="link">
+                        <a href="{% url 'item_edit' item.pk %}">{{ item.name }}</a>
+                    </td>
+                    <td>
+                        {% for key, value in item.other_properties.items %}
+                            <span><b>{{ key }}</b>: <i>{{ value }}</i></span>{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if item.account %}
+                            <a class="btn btn-sm btn-info btn-raised no-margin"
+                               href="{% url 'view_inventory_account' item.account.pk %}">{% trans 'Inventory Ledger' %}</a>
+                        {% endif %}
+                        {% if item.sale_ledger %}
+                            <a class="btn btn-sm btn-info btn-raised no-margin"
+                               href="{% url 'view_ledger' item.sale_ledger.pk %}">{% trans 'Sales Ledger' %}</a>
+                        {% endif %}
+                        {% if item.purchase_ledger %}
+                            <a class="btn btn-sm btn-info btn-raised no-margin"
+                               href="{% url 'view_ledger' item.purchase_ledger.pk %}">{% trans 'Purchase Ledger' %}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% paginate %}
+
+    </div>
+{% endblock %}

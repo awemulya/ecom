@@ -22,8 +22,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">{% trans 'Dropdown' %} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="">{% trans 'M1' %}</a></li>
-                        <li><a href="">{% trans 'm2' %}</a></li>
+                        <li><a href="{% url 'unit_list' %}">{% trans 'Unit' %}</a></li>
+                        <li><a href="{% url 'item_list' %}">{% trans 'Item' %}</a></li>
                     </ul>
                 </li>
 

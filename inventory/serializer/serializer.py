@@ -25,9 +25,12 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     unit = UnitSerializer()
-    company = CompanySerializer()
-    category = CategorySerializer()
     name = serializers.ReadOnlyField(source='__unicode__')
+    full_name = serializers.SerializerMethodField()
+
+    def get_full_name(self, obj):
+        return obj.name
+
 
     class Meta:
         model = Item

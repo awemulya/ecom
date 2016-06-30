@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse_lazy
 from django.db import models
+from jsonfield import JSONField
 from mptt.models import MPTTModel, TreeForeignKey
 
 
@@ -121,15 +122,10 @@ class Item(models.Model):
     account = models.OneToOneField(InventoryAccount, related_name='item', null=True)
     unit = models.ForeignKey(Unit)
     category = models.ForeignKey(Category, related_name='item_category', null=True, blank=True)
+    other_properties = JSONField(blank=True, null=True)
 
     def __str__(self):
         return str(self.name)
-
-
-class OtherProperties(models.Model):
-    item = models.ForeignKey(Item, related_name='properties')
-    name = models.CharField(max_length=256)
-    value = models.CharField(max_length=256)
 
 
 class ItemImages(models.Model):
