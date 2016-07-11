@@ -22,6 +22,12 @@ urlpatterns = [
     url(r'^item/delete/(?P<pk>\d+)/$', inventory_views.ItemDelete.as_view(), name='item_delete'),
     url(r'^unit/$', inventory_views.UnitListView.as_view(), name='unit_list'),
     url(r'^unit/add$', inventory_views.UnitCreate.as_view(), name='unit_add'),
+    url(r'^company/add$', inventory_views.CompanyCreate.as_view(), name='company_add'),
     url(r'^unit/edit/(?P<pk>\d+)/$', inventory_views.UnitUpdate.as_view(), name='unit_edit'),
     url(r'^unit/delete/(?P<pk>\d+)/$', inventory_views.UnitDelete.as_view(), name='unit_delete'),
+
+    # url(r'^accounts/$', inventory_views.list_inventory_accounts, name='list_inventory_accounts'),
+    url(r'^accounts/(?P<pk>[0-9]+)/$', inventory_views.view_inventory_account, name='view_inventory_account'),
+    # url(r'^accounts/(?P<pk>[0-9]+)/rate/$', inventory_views.view_inventory_account_with_rate,
+    #     name='view_inventory_account_with_rate'),
 ]

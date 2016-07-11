@@ -1,10 +1,10 @@
 {% extends base_template %}
 {% load i18n %}
 
-{% block page-title %}{{ scenario }} {% trans 'Unit' %}{% endblock %}
+{% block page-title %}{{ scenario }} {% trans 'Company' %}{% endblock %}
 
 {% block breadcrumbs %}
-    <li><a href="{% url 'unit_list' %}">{% trans 'Units' %}</a></li>
+    <li><a href="{% url 'unit_list' %}">{% trans 'Company' %}</a></li>
     <li>{{ scenario }} {{ form.instance }}</li>
 {% endblock %}
 

@@ -127,6 +127,19 @@ class Item(models.Model):
     def __str__(self):
         return str(self.name)
 
+    def save(self, *args, **kwargs):
+        account_no = kwargs.pop('account_no')
+        if account_no:
+            if self.account:
+                account = self.account
+                account.account_no = account_no
+                account.company = self.company
+            else:
+                account = InventoryAccount(name=self.name, account_no=account_no)
+                account.save()
+                self.account = account
+        super(Item, self).save(*args, **kwargs)
+
 
 class ItemImages(models.Model):
     item = models.ForeignKey(Item, related_name='images')

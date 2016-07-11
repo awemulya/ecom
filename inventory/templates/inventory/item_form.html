@@ -1,0 +1,146 @@
+{% extends base_template %}
+{% load staticfiles i18n %}
+{% load filters %}
+
+{% block page-title %}{{ scenario }} {% trans 'Item' %}{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url 'item_list' %}">{% trans 'Items' %}</a></li>
+    <li>{{ scenario }}</li>
+{% endblock %}
+
+{% block extrahead %}
+    <script src="{% static 'inventory/js/item.js' %}"></script>
+    <script>
+        item_data = {{ form.instance.other_properties| jsonify }};
+    </script>
+    <script>
+        {% if base_template == "_modal.html" %}
+            $(function () {
+                $('.selectize').selectize(options);
+            });
+        {% endif %}
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST" id='form' enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="well">
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+
+                <div class="col-lg-6 col-sm-12">
+                    {{ form.code.label_tag }}
+                    {{ form.code }}
+                    {{ form.code.errors }}
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-6 col-sm-12">
+
+                {% if request.GET.source == 'sale' and not request.company.sells_goods %}
+                    {% else %}
+                    <div>
+                        {{ form.size.label_tag }}
+                        {{ form.size }}
+                        {{ form.size.errors }}
+                    </div>
+                {% endif %}
+
+                    {% if request.GET.source == 'purchase' and not request.company.sells_goods %}
+                    {% else %}
+                        <div>
+                            {{ form.rate.label_tag }}
+                            {{ form.rate }}
+                            {{ form.rate.errors }}
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        {{ form.image.label_tag }}
+                        {{ form.image }}
+                        {{ form.image.errors }}
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 col-sm-12">
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                    {{ form.description.errors }}
+                </div>
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    {{ form.unit.label_tag }}
+                    {{ form.unit }}
+                    {{ form.unit.errors }}
+                </div>
+
+                <div class="col-lg-6 col-sm-12" style="display: none">
+                    {{ form.account_no.label_tag }}
+                    {{ form.account_no }}
+                    {{ form.account_no.errors }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    {{ form.company.label_tag }}
+                    {{ form.company }}
+                    {{ form.unit.company }}
+                </div>
+
+                <div class="col-lg-6 col-sm-12" style="display: none">
+                  </div>
+            </div>
+
+
+            {#                <label for="id_units" class="required">{% trans 'Units' %}</label>#}
+            {#                <select id="id_units" data-bind="selectize: units, value: unit_id, event: {change: unit_changed}"#}
+            {#                        data-url="{% url 'unit_add' %}" name="unit" required></select>#}
+
+            <div id="other-properties">
+
+
+                <label for="id_other_properties">{% trans "Other properties" %}</label>
+                <label>
+                    <a class="btn btn-default btn-raised" data-bind="click: addOtherProperty"><i
+                            class="fa fa-plus"></i> {% trans 'Add New' %}
+                    </a>
+                </label>
+
+                <div id="id_other_properties" data-bind="foreach: other_properties" class="form-inline">
+                    <div class="property-row">
+                        <input type="text" class="form-control test" id="id_property_name" name="property_name"
+                               placeholder="Property name" data-bind="value: property_name">
+                        <input type="text" class="form-control" id="id_property" name="property" placeholder="Property"
+                               data-bind="value: property">
+                        <button href="#" class="btn" data-bind="click: $parent.removeOtherProperty"><i
+                                class="red fa fa-trash-o"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <input type="submit" id='submit' class="btn btn-info btn-raised" value="{% trans 'Save' %}">
+        {% if form.instance.id %}
+            <a href="{% url 'item_delete' form.instance.id %}" class="btn btn-danger btn-raised">{% trans 'Delete' %}</a>
+        {% endif %}
+
+    </form>
+{% endblock %}

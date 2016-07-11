@@ -3,12 +3,18 @@ from django.core.urlresolvers import reverse_lazy
 from modeltranslation.forms import TranslationModelForm
 from django.utils.translation import ugettext_lazy as _
 from ecom.utils.forms import HTML5BootstrapModelForm, KOModelForm
-from inventory.models import Unit, InventoryAccount, Item
+from inventory.models import Unit, InventoryAccount, Item, Company
 
 
 class UnitForm(HTML5BootstrapModelForm):
     class Meta:
         model = Unit
+        exclude = ()
+
+
+class CompanyForm(HTML5BootstrapModelForm):
+    class Meta:
+        model = Company
         exclude = ()
 
 
@@ -26,6 +32,7 @@ class ItemForm(HTML5BootstrapModelForm, KOModelForm, TranslationModelForm):
         if self.instance.id:
             self.fields['account_no'].widget = forms.HiddenInput()
         self.fields['unit'].queryset = Unit.objects.all()
+        self.fields['company'].queryset = Company.objects.all()
 
     def clean_account_no(self):
         if not self.cleaned_data['account_no'].isdigit():
@@ -45,6 +52,7 @@ class ItemForm(HTML5BootstrapModelForm, KOModelForm, TranslationModelForm):
         exclude = ['other_properties', 'account']
         widgets = {
             'unit': forms.Select(attrs={'class': 'selectize', 'data-url': reverse_lazy('unit_add')}),
+            'company': forms.Select(attrs={'class': 'selectize', 'data-url': reverse_lazy('company_add')}),
         }
         company_filters = ['unit']
 

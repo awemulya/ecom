@@ -5,8 +5,8 @@ from django.views.generic.list import ListView
 from django.core.urlresolvers import reverse, reverse_lazy
 
 from ecom.utils.mixins import AjaxableResponseMixin, CreateView, UpdateView, DeleteView
-from inventory.forms import UnitForm, ItemForm
-from inventory.models import Item, Unit
+from inventory.forms import UnitForm, ItemForm, CompanyForm
+from inventory.models import Item, Unit, Company
 from inventory.serializer.serializer import ItemSerializer
 
 
@@ -20,8 +20,14 @@ class UnitDetailView(DetailView):
 
 class UnitView(object):
     model = Unit
-    success_url = reverse_lazy('inventory:unit_list')
+    success_url = reverse_lazy('unit_list')
     form_class = UnitForm
+
+
+class CompanyView(object):
+    model = Company
+    success_url = reverse_lazy('unit_list')
+    form_class = CompanyForm
 
 
 class UnitListView(UnitView, ListView):
@@ -31,6 +37,9 @@ class UnitListView(UnitView, ListView):
 class UnitCreate(AjaxableResponseMixin, UnitView, CreateView):
     pass
 
+class CompanyCreate(AjaxableResponseMixin, CompanyView, CreateView):
+    pass
+
 
 class UnitUpdate(UnitView, UpdateView):
     pass
@@ -38,6 +47,7 @@ class UnitUpdate(UnitView, UpdateView):
 
 class UnitDelete(UnitView, DeleteView):
     pass
+
 
 def item(request, pk=None):
     if pk:
@@ -74,7 +84,7 @@ def item(request, pk=None):
         base_template = '_modal.html'
     else:
         base_template = '_base.html'
-    return render(request, 'item_form.html',
+    return render(request, 'inventory/item_form.html',
                   {'form': form, 'base_template': base_template, 'scenario': scenario,
                    'item_data': item_obj.other_properties,
                    })
@@ -91,3 +101,7 @@ class ItemList(ItemView, ListView):
 
 class ItemDelete(ItemView, DeleteView):
     pass
+
+
+def view_inventory_account(request, pk):
+    return render(request, 'inventory/home.html')

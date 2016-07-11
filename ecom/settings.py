@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'njango',
     'rest_framework',
     'mptt',
     'linaro_django_pagination',
